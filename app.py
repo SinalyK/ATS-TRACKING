@@ -18,15 +18,15 @@ llm=ChatGroq(groq_api_key=groq_api_key,model="Gemma2-9b-It")
 #Streamlit App
 st.title("ATS Tracking System")
 input_text=st.text_area("Job Description")
-upload_file=st.file_uploader("Upload your CV(PDF)",type=['pdf'],accept_multiple_files=True)
+upload_files=st.file_uploader("Upload your CV(PDF)",type=['pdf'],accept_multiple_files=True)
 
 ##Document Loading
-if upload_file is not None:
-    for file in upload_file:
+if upload_files is not None:
+    for uploaded_file in upload_files:
         temppdf=f"./temp.pdf"
         with open(temppdf,"wb") as file:
-            file.write(file.getvalue())
-            file_name=file.name
+            file.write(uploaded_file.getvalue())
+            file_name=uploaded_file.name
 
         docs=PyPDFLoader(temppdf)
         st.success("PDF Uploaded Succesfully Choose one option")
@@ -66,12 +66,12 @@ Job description:{input}
 btn2=st.button("what are the Keywords that are missied")
 btn3=st.button("Percentage match")
 lang=st.radio("Langue:",options=["English","French"])
-if btn2 and upload_file is not None:
+if btn2 and upload_files is not None:
     stuff_chain=create_stuff_documents_chain(llm=llm,prompt=prompt1)
     chain=create_retrieval_chain(retriever,stuff_chain)
     response=chain.invoke({"input":input_text})
     st.write(response['answer'])
-elif btn3 and upload_file is not None:
+elif btn3 and upload_files is not None:
     stuff_chain=create_stuff_documents_chain(llm=llm,prompt=prompt2)
     chain=create_retrieval_chain(retriever,stuff_chain)
     response=chain.invoke({"lang":lang,"input":input_text})
