@@ -3,7 +3,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
-from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain.chains import create_stuff_chain
 from langchain.chains import create_retrieval_chain
 from langchain.vectorstores import FAISS
 import streamlit as st
@@ -67,7 +67,7 @@ btn2=st.button("what are the Keywords that are missied")
 btn3=st.button("Percentage match")
 lang=st.radio("Langue:",options=["English","French"])
 if btn2 and upload_files is not None:
-    stuff_chain=create_stuff_documents_chain(llm=llm,prompt=prompt1)
+    stuff_chain=create_stuff_chain(llm=llm,prompt=prompt1)
     chain=create_retrieval_chain(retriever,stuff_chain)
     response=chain.invoke({"input":input_text})
     st.write(response['answer'])
@@ -77,5 +77,6 @@ elif btn3 and upload_files is not None:
     response=chain.invoke({"lang":lang,"input":input_text})
     st.write(response['answer'])
     
+
 
 
